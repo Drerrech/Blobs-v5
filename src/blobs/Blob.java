@@ -5,23 +5,35 @@ import cells.Cell;
 import chunks.Chunk; // import cells.Leaf
 import java.util.List;
 
-public class Blob {
+public final class Blob {
     public Chunk parentChunk;
     public List<Cell> cells;
+    public double[][] brainMatrix;
+    public double[] brainBias;
+
     public double mass;
     public double momentOfInertia;
     public double maxEnergy;
     public double energy;
     public double dragCoefficient;
-    public double[] acceleration = new double[3]; // rotation included
+    public double[] netForce = new double[3]; // rotation included
     public double[] velocity = new double[3]; // rotation included
     public double[] globalPosition = new double[3]; // rotation included
 
     // public Blob(genome of sorts) TODO: add genome + parentChunk at initialization | drug coef is the multiplication of all coefs of cells
-    
-    // void addCells(genome) ???
+    Blob(Chunk parentChunk, List<Cell> cells, double[][] brainMatrix, double[] brainBias) {
+        this.parentChunk = parentChunk;
+        this.cells = cells;
+        this.brainMatrix = brainMatrix;
+        this.brainBias = brainBias;
 
-    public void calculateStats() {
+        calculateStats();
+        // cells ids and parentBlob are given by parent
+    }
+
+    // void cellsFromJson(genome) implemet later, and add species tracking
+
+    public final void calculateStats() {
         // for now max energy is just 100J per cell
         this.maxEnergy = this.cells.size() * 100;
 
@@ -57,8 +69,8 @@ public class Blob {
         // update energy income
         this.energy += this.parentChunk.passivePower * deltaTime; // passive
 
-        // reset acceleration
-        this.acceleration = new double[3];
+        // reset netForce
+        this.netForce = new double[3];
 
         // update cells
         for (Cell cell : this.cells) {
@@ -66,7 +78,7 @@ public class Blob {
         }
 
         // update velocity and position
-        for(int i = 0; i < 3; i++) this.velocity[i] += this.acceleration[i]; // deltaTime was applied in cell/other updates
+        for(int i = 0; i < 3; i++) this.velocity[i] += this.netForce[i] / this.mass; // deltaTime was applied in cell/other updates
         // for(int i = 0; i < 3; i++) this.velocity[i] *= this.parentChunk.wind or smth
 
         for(int i = 0; i < 3; i++) this.velocity[i] *= this.dragCoefficient;

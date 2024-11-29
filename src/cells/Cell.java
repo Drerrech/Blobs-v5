@@ -4,6 +4,8 @@ import blobs.Blob;
 
 public class Cell {
     public Blob parentBlob;
+    public String CommunicationType = "none"; // none, input, output
+    public int id;
     public double mass; // kg
     public double maxHealth; // idk
     public double health; // idk

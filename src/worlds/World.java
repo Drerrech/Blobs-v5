@@ -10,17 +10,7 @@ public class World {
 
     public Chunk[][] chunks;
 
-    World(double[] size, int[] numChunks, double deltaTime) {
-        this.size = size.clone();
-        this.numChunks = numChunks.clone();
-        this.deltaTime = deltaTime;
-
-        this.chunks = new Chunk[this.numChunks[0]][this.numChunks[1]]; // move to a method createChunks() or smth
-
-        //TODO: create chunks (as method)
-    }
-
-    World() { // preferred settings
+    public World() { // preferred settings
         this.size = new double[] {1024, 1024}; // km x km world we'll see if it's too big
         this.numChunks = new int[] {32, 32}; // 1024/32 = 32x32 | chunk size is directly connected to the eye cells!!!
         this.chunkSize = new double[] {this.size[0] / this.numChunks[0], this.size[1] / this.numChunks[1]};
@@ -28,6 +18,22 @@ public class World {
 
         this.chunks = new Chunk[this.numChunks[0]][this.numChunks[1]];
 
-        //TODO: create chunks (as method)
+        createChunks();
+    }
+
+    private void createChunks() {
+        for (int i = 0; i < this.numChunks[0]; i++) {
+            for (int j = 0; j < this.numChunks[1]; j++) {
+                this.chunks[i][j] = new Chunk(this, new double[] {i * this.chunkSize[0], j * this.chunkSize[1]}, 0, 0);
+            }
+        }
+    }
+
+    public void update() {
+        for (int i = 0; i < this.numChunks[0]; i++) {
+            for (int j = 0; j < this.numChunks[1]; j++) {
+                this.chunks[i][j].update();
+            }
+        }
     }
 }

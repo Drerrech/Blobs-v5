@@ -1,9 +1,9 @@
 package chunks;
 
-import worlds.World;
 import blobs.Blob;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import worlds.World;
 
 public class Chunk {
     public World parentWorld;
@@ -13,14 +13,14 @@ public class Chunk {
     public double solarPower; // same deal as above
     
 
-    Chunk(World parentWorld, double[] globalPosition, double passivePower, double solarPower) {
+    public Chunk(World parentWorld, double[] globalPosition, double passivePower, double solarPower) {
         this.parentWorld = parentWorld;
         this.globalPosition = globalPosition.clone();
         this.passivePower = passivePower;
         this.solarPower = solarPower;
     }
 
-    void update() {
+    public void update() {
         // update blobs
         for (Blob blob : blobs) {
             blob.update(parentWorld.deltaTime);
@@ -39,7 +39,7 @@ public class Chunk {
         iterator = blobs.iterator();
         while (iterator.hasNext()) {
             Blob blob = iterator.next();
-            if (blob.globalPosition[0] < this.globalPosition[0] || blob.globalPosition[0] > this.globalPosition[0] + this.size[0] || blob.globalPosition[1] < this.globalPosition[1] - this.size[1] || blob.globalPosition[1] > this.globalPosition[1]) {
+            if (blob.globalPosition[0] < this.globalPosition[0] || blob.globalPosition[0] > this.globalPosition[0] + this.parentWorld.chunkSize[0] || blob.globalPosition[1] < this.globalPosition[1] - this.parentWorld.chunkSize[1] || blob.globalPosition[1] > this.globalPosition[1]) {
                 // transfer to the appropriate chunk
                 int[] index = new int[2];
                 index[0] = (int) (blob.globalPosition[0] / parentWorld.chunkSize[0]);
