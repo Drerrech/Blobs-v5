@@ -14,7 +14,8 @@ public class Main {
         // start simulation loop
         while (true) {
             world.update();
-            render.repaint();
+
+            render.refresh();
             // TODO: sleep for deltaTime
         }
     }

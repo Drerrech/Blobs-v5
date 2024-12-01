@@ -3,11 +3,12 @@ package blobs;
 // TODO: add other cells
 import cells.Cell;
 import chunks.Chunk; // import cells.Leaf
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Blob {
     public Chunk parentChunk;
-    public List<Cell> cells;
+    public List<Cell> cells = new ArrayList<>();
     public double[][] brainMatrix;
     public double[] brainBias;
 

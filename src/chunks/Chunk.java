@@ -1,13 +1,14 @@
 package chunks;
 
 import blobs.Blob;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import worlds.World;
 
 public class Chunk {
     public World parentWorld;
-    public List<Blob> blobs;
+    public List<Blob> blobs = new ArrayList<>();
     public double[] globalPosition;
     public double passivePower; // power per second -> will be multiplied by deltaTime
     public double solarPower; // same deal as above
