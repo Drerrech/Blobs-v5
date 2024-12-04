@@ -22,12 +22,12 @@ public final class Blob {
     public double[] globalPosition = new double[3]; // rotation included
 
     // public Blob(genome of sorts) TODO: add genome + parentChunk at initialization | drug coef is the multiplication of all coefs of cells
-    Blob(Chunk parentChunk, List<Cell> cells, double[][] brainMatrix, double[] brainBias) {
+    public Blob(Chunk parentChunk, List<Cell> cells, double[][] brainMatrix, double[] brainBias, double[] globalPosition) {
         this.parentChunk = parentChunk;
         this.cells = cells;
         this.brainMatrix = brainMatrix;
         this.brainBias = brainBias;
-
+        this.globalPosition = globalPosition;
         calculateStats();
         // cells ids and parentBlob are given by parent
     }
@@ -89,9 +89,11 @@ public final class Blob {
     }
 
     public boolean isDead() {
-        if (this.energy <= 0 || this.cells.isEmpty()) {
-            return true;
-        }
-        return false;
+       return false; // TODO: REMOVE
+       
+    //    if (this.energy <= 0 || this.cells.isEmpty()) {
+    //         return true;
+    //     }
+    //     return false;
     }
 }
