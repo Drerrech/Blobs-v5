@@ -176,9 +176,4 @@ public class Render extends JPanel {
             moveSpeedMultiplier = 2E0;
         } else moveSpeedMultiplier = 0.5E0;
     }
-
-    public void refresh() {
-        update(); // Update camera position based on held keys
-        repaint();
-    }
 }
