@@ -1,12 +1,14 @@
 package render;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import java.util.HashSet;
 
 import worlds.World;
-//import blobs.Blob;
-//import cells.Cell;
+import chunks.Chunk;
+import blobs.Blob;
+import cells.Cell;
 
 public class Render extends PApplet {
 	public double[] size = { 800, 800 };
@@ -21,12 +23,21 @@ public class Render extends PApplet {
 
 	private HashSet<Character> keys = new HashSet<Character>();
 
+	PImage[] cellTextures = new PImage[5];
+	int cellPixelSize = 32;
+
 	public void settings() {
 		size((int) size[0], (int) size[1]);
 	}
 
 	public void setup() {
 		frameRate(frameRate);
+		
+		String pth = "resources/textures/cells_debug.png";
+		PImage textures = loadImage(pth);
+		for (int i = 0; i < 5; i++) {
+			cellTextures[i] = textures.get(i*32, 0, 32, 32);
+		}
 	}
 
 	public void draw() {
@@ -64,12 +75,27 @@ public class Render extends PApplet {
 						(int) (world.chunkSize[1] * size[1] / cameraSize[1]));
 
 				// draw blobs inside the chunk
-//                if (world.chunks[i][j].blobs.isEmpty()) continue; // no blobs, our job here is done
-//                for (Blob blob : world.chunks[i][j].blobs) {
-//                    for (Cell cell : blob.cells) {
-//                    	// later
-//                    }
-//                }
+                if (world.chunks[i][j].blobs.isEmpty()) continue; // no blobs, our job here is done
+                
+                for (Blob blob : world.chunks[i][j].blobs) {
+                	pushMatrix(); // drawing as a group
+        			translate((int)((blob.globalPosition[0] - minX) * size[0] / cameraSize[0]), (int)((blob.globalPosition[1] - minY) * size[1] / cameraSize[1]));
+        			rotate(-(float)blob.globalPosition[2]);
+        			
+        			scale((float)(1 * size[0] / (cellPixelSize*cameraSize[0]))); // cells are 1 unit (and 32 pixels) and camera is square
+        			
+        			imageMode(CENTER); // no need to offset by -0.5 now
+        			for (Cell cell : blob.cells) { // draw as if blob has not been displaced
+        				pushMatrix();
+        				translate((int)(cell.relativePosition[0] * cellPixelSize), (int)(cell.relativePosition[1] * cellPixelSize));
+        				rotate(-(float)cell.relativePosition[2]); // it's clockwise, also for some reason no need to revert the rotation
+        				
+        				image(cellTextures[cell.type], 0, 0);
+        				popMatrix();
+        			}
+        			
+        			popMatrix();
+        		}
 			}
 		}
 
