@@ -1,10 +1,11 @@
 package blobs;
 
 // TODO: add other cells
-import cells.Cell;
-import chunks.Chunk; // import cells.Leaf
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List; // import cells.Leaf
+
+import cells.Cell;
+import chunks.Chunk;
 
 public final class Blob {
     public Chunk parentChunk;
@@ -64,14 +65,16 @@ public final class Blob {
         for (Cell cell : this.cells) {
             this.momentOfInertia += cell.getMass() * Math.pow(cell.distanceToBlobCenter, 2);
         }
+
+        // claculate drag coefficient based on  number of cells
+        double totalDrag = 0;
+        for (Cell cell : this.cells) totalDrag += cell.dragCoefficient;
+        this.dragCoefficient = 1 / (0.1 * totalDrag + 1); //range: [0, 1], more total drag -> closer to 0 | for eight units of drag  (16 leaf cells = 40 fat cells), it is approximately 0.5
     }
 
     public void update(double deltaTime) {
-        // update energy income
+    	// update energy income
         this.energy += this.parentChunk.passivePower * deltaTime; // passive
-
-        // reset netForce
-        this.netForce = new double[3];
 
         // update cells
         for (Cell cell : this.cells) {
@@ -80,11 +83,11 @@ public final class Blob {
 
         // update velocity and position
         for(int i = 0; i < 3; i++) this.velocity[i] += this.netForce[i] / this.mass; // deltaTime was applied in cell/other updates
-        // for(int i = 0; i < 3; i++) this.velocity[i] *= this.parentChunk.wind or smth
-
-        for(int i = 0; i < 3; i++) this.velocity[i] *= this.dragCoefficient;
-
+//        for(int i = 0; i < 3; i++) this.velocity[i] *= this.dragCoefficient;
         for(int i = 0; i < 3; i++) this.globalPosition[i] += this.velocity[i];
+        
+        // reset netForce
+        this.netForce = new double[3];
 
     }
 

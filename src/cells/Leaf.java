@@ -6,6 +6,7 @@ public class Leaf extends Cell {
     public Leaf(Blob parentBlob, double[] relativePosition) {
         super(parentBlob, 2, 1, 0.6, 2, relativePosition); // parentBlob, mass, max health, drag coefficient, energy cost
         this.type = 2;
+        this.dragCoefficient = 0.5;
     }
     
     @Override

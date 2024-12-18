@@ -4,7 +4,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import java.util.HashSet;
+import java.util.Arrays;
 
+import main.Main;
 import worlds.World;
 import chunks.Chunk;
 import blobs.Blob;
@@ -32,6 +34,7 @@ public class Render extends PApplet {
 
 	public void setup() {
 		frameRate(frameRate);
+		if (Main.useRender) world.deltaTime = 1 / (double)frameRate;
 		
 		String pth = "resources/textures/cells_debug.png";
 		PImage textures = loadImage(pth);
@@ -41,6 +44,9 @@ public class Render extends PApplet {
 	}
 
 	public void draw() {
+		// call world update to keep it synced
+		if (Main.useRender) world.update();
+		
 		// call update
 		update();
 
