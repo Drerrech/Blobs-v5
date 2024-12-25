@@ -72,23 +72,25 @@ public final class Blob {
         this.dragCoefficient = 1 / (0.1 * totalDrag + 1); //range: [0, 1], more total drag -> closer to 0 | for eight units of drag  (16 leaf cells = 40 fat cells), it is approximately 0.5
     }
 
-    public void update(double deltaTime) {
+    public void updateGeneral(double deltaTime) {
     	// update energy income
         this.energy += this.parentChunk.passivePower * deltaTime; // passive
 
-        // update cells
+        // update cells (acceleration and other stuff)
         for (Cell cell : this.cells) {
             cell.update(deltaTime);
         }
 
-        // update velocity and position
+        // update velocity
         for(int i = 0; i < 3; i++) this.velocity[i] += this.netForce[i] / this.mass; // deltaTime was applied in cell/other updates
-//        for(int i = 0; i < 3; i++) this.velocity[i] *= this.dragCoefficient;
-        for(int i = 0; i < 3; i++) this.globalPosition[i] += this.velocity[i];
+        for(int i = 0; i < 3; i++) this.velocity[i] *= this.dragCoefficient;
         
         // reset netForce
         this.netForce = new double[3];
+    }
 
+     public void updatePosition(double deltaTime) {
+    	for(int i = 0; i < 3; i++) this.globalPosition[i] += this.velocity[i];
     }
 
     public boolean isDead() {
